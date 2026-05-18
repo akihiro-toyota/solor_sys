@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>太陽光発電＆自治体補助金AIナビゲーター | Solar Subsidy AI Navigator</title>
+  <meta name="description" content="日本の主要自治体に対応した太陽光発電・蓄電池システムのシミュレーター、メーカー製品データベース、およびAIチャットによる補助金申請サポートアプリです。">
+  <link rel="stylesheet" href="style.css">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="logo-container">
+        <div class="logo-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M6.34 17.66l-1.41 1.41"/><path d="M19.07 4.93l-1.41 1.41"/></svg>
+        </div>
+        <div>
+          <h2 class="logo-text">Solar Subsidy</h2>
+          <span class="logo-subtext">AI NAVIGATOR</span>
+        </div>
+      </div>
+      
+      <ul class="nav-links">
+        <li class="nav-item active" data-target="screen-simulator">
+          <button>
+            <i data-lucide="sliders"></i>
+            <span>シミュレーター</span>
+          </button>
+        </li>
+        <li class="nav-item" data-target="screen-products">
+          <button>
+            <i data-lucide="database"></i>
+            <span>製品データベース</span>
+          </button>
+        </li>
+        <li class="nav-item" data-target="screen-subsidy">
+          <button>
+            <i data-lucide="file-check"></i>
+            <span>補助金ナビ・申請</span>
+          </button>
+        </li>
+        <li class="nav-item" data-target="screen-chat">
+          <button>
+            <i data-lucide="message-square"></i>
+            <span>AIチャットボット</span>
+          </button>
+        </li>
+      </ul>
+      
+      <div class="sidebar-footer">
+        <div class="badge-eco">
+          <i data-lucide="leaf"></i>
+          <span>Eco Friendly App</span>
+        </div>
+        <span class="footer-info">© 2026 Solar Subsidy AI</span>
+      </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      
+      <!-- Top Header Wrapper -->
+      <header class="header-wrapper">
+        <div class="page-title">
+          <h1 id="main-title">スマート導入シミュレーター</h1>
+          <p id="main-subtitle">郵便番号や電気代、製品スペックに基づいて最適なシステムと補助金をシミュレートします。</p>
+        </div>
+        <div id="top-badge" class="badge-eco">
+          <i data-lucide="zap"></i>
+          <span>発電効率シミュレーション中</span>
+        </div>
+      </header>
+      
+      <!-- SCREEN 1: SIMULATOR -->
+      <section id="screen-simulator" class="screen-content">
+        <div class="dashboard-grid">
+          
+          <!-- Parameters Left Side -->
+          <div class="card-glass">
+            <h2 class="card-title">
+              <i data-lucide="settings-2"></i>
+              <span>シミュレーション条件</span>
+            </h2>
+            
+            <!-- Region Selection -->
+            <div class="input-group">
+              <label class="input-label" for="select-region">
+                <span>設置地域 (自治体)</span>
+              </label>
+              <select id="select-region" class="input-select">
+                <option value="tokyo">東京都 (クール・ネット東京)</option>
+                <option value="yokohama">神奈川県 横浜市</option>
+                <option value="saitama">埼玉県 さいたま市</option>
+                <option value="nagoya">愛知県 名古屋市</option>
+                <option value="osaka">大阪府 大阪市</option>
+                <option value="custom">その他 (手動で補助金を入力する)</option>
+              </select>
+            </div>
+
+            <!-- Custom Subsidy Parameter Inputs (Hidden by default) -->
+            <div id="group-custom-subsidy" class="hidden" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px dashed var(--glass-border);">
+              <h3 style="font-size: 0.95rem; font-weight: 700; color: #fff; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i data-lucide="edit-3" style="width:16px; height:16px; color: var(--color-cyan);"></i>
+                <span>カスタム補助金設定</span>
+              </h3>
+              
+              <div class="input-group">
+                <label class="input-label" for="range-custom-solar-rate">
+                  <span>太陽光補助金 (1kWあたり)</span>
+                  <span class="value-bubble" id="bubble-custom-solar-rate">20,000円</span>
+                </label>
+                <input type="range" id="range-custom-solar-rate" class="input-range" min="0" max="150000" step="5000" value="20000">
+              </div>
+              
+              <div class="input-group">
+                <label class="input-label" for="range-custom-solar-max">
+                  <span>太陽光上限額</span>
+                  <span class="value-bubble" id="bubble-custom-solar-max">100,000円</span>
+                </label>
+                <input type="range" id="range-custom-solar-max" class="input-range" min="0" max="500000" step="10000" value="100000">
+              </div>
+              
+              <div class="input-group">
+                <label class="input-label" for="range-custom-battery-rate">
+                  <span>蓄電池補助金 (1kWhあたり)</span>
+                  <span class="value-bubble" id="bubble-custom-battery-rate">15,000円</span>
+                </label>
+                <input type="range" id="range-custom-battery-rate" class="input-range" min="0" max="150000" step="5000" value="15000">
+              </div>
+              
+              <div class="input-group">
+                <label class="input-label" for="range-custom-battery-max">
+                  <span>蓄電池上限額</span>
+                  <span class="value-bubble" id="bubble-custom-battery-max">100,000円</span>
+                </label>
+                <input type="range" id="range-custom-battery-max" class="input-range" min="0" max="800000" step="10000" value="100000">
+              </div>
+            </div>
+            
+            <!-- Monthly Electric Bill -->
+            <div class="input-group">
+              <label class="input-label" for="range-bill">
+                <span>月々の電気代</span>
+                <span class="value-bubble" id="bubble-bill">15,000円</span>
+              </label>
+              <input type="range" id="range-bill" class="input-range" min="5000" max="50000" step="1000" value="15000">
+            </div>
+            
+            <!-- Solar Panel Selection -->
+            <div class="input-group">
+              <label class="input-label" for="select-solar">
+                <span>太陽光パネル</span>
+              </label>
+              <select id="select-solar" class="input-select">
+                <!-- Will be dynamically populated -->
+              </select>
+            </div>
+            
+            <!-- Solar Panel Count -->
+            <div class="input-group" id="group-panel-count">
+              <label class="input-label" for="range-panels">
+                <span>パネル設置枚数</span>
+                <span class="value-bubble" id="bubble-panels">15枚</span>
+              </label>
+              <input type="range" id="range-panels" class="input-range" min="4" max="40" step="1" value="15">
+              <span class="input-label" style="font-size: 0.75rem; margin-top: 0.25rem;">
+                <span id="label-solar-capacity">合計容量: 5.55 kW</span>
+              </span>
+            </div>
+            
+            <!-- Battery Selection -->
+            <div class="input-group">
+              <label class="input-label" for="select-battery">
+                <span>蓄電池システム</span>
+              </label>
+              <select id="select-battery" class="input-select">
+                <!-- Will be dynamically populated -->
+              </select>
+            </div>
+            
+          </div>
+          
+          <!-- Results Right Side -->
+          <div class="vis-container">
+            
+            <!-- Numeric Summary cards -->
+            <div class="results-grid">
+              
+              <div class="result-card-mini">
+                <div class="mini-icon cyan">
+                  <i data-lucide="yen-sign"></i>
+                </div>
+                <div class="mini-content">
+                  <span class="label">実質負担額</span>
+                  <span class="value" id="val-net-cost">0円</span>
+                  <span class="sub" id="val-total-cost">初期費用: 0円</span>
+                </div>
+              </div>
+              
+              <div class="result-card-mini">
+                <div class="mini-icon emerald">
+                  <i data-lucide="gift"></i>
+                </div>
+                <div class="mini-content">
+                  <span class="label">補助金合計金額</span>
+                  <span class="value" id="val-subsidy">0円</span>
+                  <span class="sub" id="val-subsidy-details">国 0円 + 自治体 0円</span>
+                </div>
+              </div>
+              
+              <div class="result-card-mini">
+                <div class="mini-icon amber">
+                  <i data-lucide="trending-up"></i>
+                </div>
+                <div class="mini-content">
+                  <span class="label">年間電気代削減額</span>
+                  <span class="value" id="val-annual-savings">0円/年</span>
+                  <span class="sub" id="val-savings-details">自家消費 + 売電</span>
+                </div>
+              </div>
+              
+              <div class="result-card-mini">
+                <div class="mini-icon crimson">
+                  <i data-lucide="clock"></i>
+                </div>
+                <div class="mini-content">
+                  <span class="label">初期投資回収年数</span>
+                  <span class="value" id="val-payback">0.0年</span>
+                  <span class="sub" id="val-payback-text">補助金適用後の概算</span>
+                </div>
+              </div>
+              
+            </div>
+            
+            <!-- SVG Charts & Ecological impacts -->
+            <div class="vis-row">
+              
+              <!-- Cost Breakdown SVG Chart -->
+              <div class="card-glass chart-wrapper">
+                <span class="chart-title">初期費用と補助金の内訳</span>
+                <div id="chart-cost-container" style="width:100%; height:180px; display:flex; align-items:center; justify-content:center;">
+                  <!-- Dynamic SVG will be injected here -->
+                </div>
+              </div>
+              
+              <!-- Self Consumption Ring SVG Chart -->
+              <div class="card-glass chart-wrapper">
+                <span class="chart-title">発電電力の自家消費率</span>
+                <div id="chart-ratio-container" style="width:100%; height:180px; display:flex; align-items:center; justify-content:center;">
+                  <!-- Dynamic SVG will be injected here -->
+                </div>
+              </div>
+              
+            </div>
+            
+            <!-- CO2 reduction showcase -->
+            <div class="card-glass" style="display:flex; align-items:center; gap:2rem; padding:1.5rem;">
+              <div style="background: rgba(16, 185, 129, 0.15); width:64px; height:64px; border-radius:16px; display:flex; align-items:center; justify-content:center; color: var(--color-emerald); font-size:2rem; border: 1px solid rgba(16, 185, 129, 0.3);">
+                <i data-lucide="tree-pine"></i>
+              </div>
+              <div>
+                <h3 style="font-size:1.1rem; font-weight:700; color:#fff; margin-bottom:0.25rem;">地球環境への貢献効果</h3>
+                <p style="color:var(--text-secondary); font-size:0.9rem;">
+                  このシステム構成により、年間約 <strong id="val-co2" style="color:var(--color-emerald); font-size:1.1rem;">0</strong> kgのCO2排出を削減します。これは、杉の木 <strong id="val-trees" style="color:var(--color-emerald); font-size:1.1rem;">0</strong> 本が1年間に吸収する量に相当します！
+                </p>
+              </div>
+            </div>
+            
+          </div>
+          
+        </div>
+      </section>
+      
+      <!-- SCREEN 2: PRODUCTS DATABASE -->
+      <section id="screen-products" class="screen-content hidden">
+        <div class="tab-buttons-sub">
+          <button class="tab-sub active" id="btn-sub-solar">太陽光パネル 一覧</button>
+          <button class="tab-sub" id="btn-sub-battery">蓄電池システム 一覧</button>
+        </div>
+        
+        <div class="catalog-grid" id="catalog-products-container">
+          <!-- Dynamically populated product cards -->
+        </div>
+      </section>
+      
+      <!-- SCREEN 3: SUBSIDY TIMELINE & CHECKLIST -->
+      <section id="screen-subsidy" class="screen-content hidden">
+        <div class="subsidy-grid">
+          
+          <!-- Left side: Timeline steps -->
+          <div class="card-glass">
+            <h2 class="card-title">
+              <i data-lucide="calendar"></i>
+              <span id="subsidy-timeline-title">東京都の申請タイムライン</span>
+            </h2>
+            <p style="color: var(--text-secondary); font-size:0.9rem;">※補助金の交付を受けるには、必ず着工前に申請・受理される必要があります。</p>
+            
+            <div class="timeline" id="subsidy-steps-container">
+              <!-- Dynamically populated steps -->
+            </div>
+          </div>
+          
+          <!-- Right side: Required documents checklist -->
+          <div class="card-glass">
+            <div class="checklist-header">
+              <div>
+                <h2 class="card-title" style="margin-bottom:0.25rem;">
+                  <i data-lucide="clipboard-list"></i>
+                  <span>必要提出書類チェックリスト</span>
+                </h2>
+                <p style="color: var(--text-secondary); font-size:0.85rem;" id="subsidy-checklist-sub">選択中の自治体: 東京都</p>
+              </div>
+              <button class="btn-print" onclick="window.print()">
+                <i data-lucide="printer"></i>
+                <span>印刷する</span>
+              </button>
+            </div>
+            
+            <div class="checklist-progress-bar">
+              <div class="checklist-progress-fill" id="checklist-progress"></div>
+            </div>
+            
+            <div id="subsidy-checklist-container">
+              <!-- Dynamically populated checklist items -->
+            </div>
+            
+            <div class="subsidy-info-box">
+              <h3>
+                <i data-lucide="alert-triangle"></i>
+                <span>申請に関する重要なヒント</span>
+              </h3>
+              <p id="subsidy-tips-text">
+                東京都の補助金は全国でも最大水準ですが、国のZEH等支援事業と併用する場合、申請順序や重複排除ルールが適用される場合があります。登録施工会社が申請手続きを代行するのが一般的ですが、書類の最終確認は必ず所有者本人が行うようにしてください。
+              </p>
+            </div>
+          </div>
+          
+        </div>
+      </section>
+      
+      <!-- SCREEN 4: AI CHATBOT -->
+      <section id="screen-chat" class="screen-content hidden">
+        <div class="card-glass chat-container">
+          
+          <!-- Messages list -->
+          <div class="chat-messages" id="chat-messages-container">
+            <!-- Starting bot message will be inserted dynamically -->
+          </div>
+          
+          <!-- Quick Question Suggestions chips -->
+          <div class="chat-suggestions" id="chat-suggestions-container">
+            <!-- Suggestion chips will be populated here -->
+          </div>
+          
+          <!-- Text Box Input Bar -->
+          <div class="chat-input-bar">
+            <input type="text" id="chat-input-text" class="chat-input" placeholder="太陽光の寿命は？ 補助金に必要な書類は？ 何でも聞いてください...">
+            <button class="btn-send" id="btn-chat-send">
+              <i data-lucide="send"></i>
+            </button>
+          </div>
+          
+        </div>
+      </section>
+      
+    </main>
+    
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="data.js"></script>
+  <script src="calculator.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
